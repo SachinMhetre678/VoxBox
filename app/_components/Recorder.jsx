@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import useRecorder from './useRecorder';
 
 const Recorder = () => {
   const {
     isRecording,
-    transcript,
+    transcript: initialTranscript,
     speechRecognitionSupported,
     voices,
     selectedVoice,
@@ -14,7 +14,26 @@ const Recorder = () => {
     stopRecording,
     hearWhatYouSaid,
   } = useRecorder();
-  
+
+  const [transcript, setTranscript] = useState('');
+
+  useEffect(() => {
+    // Update the transcript when the initialTranscript changes
+    if (initialTranscript) {
+      addUniqueWords(initialTranscript);
+    }
+  }, [initialTranscript]);
+
+  // Function to add unique words to the transcript
+  const addUniqueWords = (newTranscript) => {
+    const newWords = newTranscript.split(' ');
+    setTranscript((prev) => {
+      const existingWords = prev.split(' ');
+      const uniqueWords = newWords.filter(word => !existingWords.includes(word));
+      return [...existingWords, ...uniqueWords].join(' ');
+    });
+  };
+
   return (
     <div className="relative" id="home">
       <div aria-hidden="true" className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20">
