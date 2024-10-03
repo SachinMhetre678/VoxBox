@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { Button } from '../../components/ui/button'; // Adjusted import path
 import useRecorder from './useRecorder';
 
 const Recorder = () => {
   const {
     isRecording,
-    transcript: initialTranscript,
+    transcript,
     speechRecognitionSupported,
     voices,
     selectedVoice,
@@ -14,20 +14,6 @@ const Recorder = () => {
     stopRecording,
     hearWhatYouSaid,
   } = useRecorder();
-
-  const [transcript, setTranscript] = useState('');
-
-  useEffect(() => {
-    if (initialTranscript) {
-      processTranscript(initialTranscript);
-    }
-  }, [initialTranscript]);
-
-  const processTranscript = (newTranscript) => {
-    const words = newTranscript.split(' ');
-    const uniqueWords = Array.from(new Set(words)).join(' '); // Remove duplicates
-    setTranscript(uniqueWords);
-  };
 
   return (
     <div className="relative" id="home">
@@ -42,43 +28,30 @@ const Recorder = () => {
               VoxBox: Where <span className="text-primary dark:text-white">your voice becomes collaboration.</span>
             </h1>
             <p className="mt-8 text-gray-700 dark:text-gray-300">
-              VoxBox is an innovative platform designed for seamless voice communication and collaboration. 
-              With advanced voice recognition technology, teams can capture ideas, transcribe meetings, 
-              and foster creativity in real-time.
+              VoxBox is an innovative platform designed for seamless voice communication and collaboration. With advanced voice recognition technology, teams can capture ideas, transcribe meetings, and foster creativity in real-time. Experience a workspace that enhances productivity through effortless voice interaction.
             </p>
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
               {speechRecognitionSupported ? (
                 <>
-                  <Button 
-                    onClick={startRecording} 
-                    disabled={isRecording} 
-                    className="relative text-base font-semibold text-white"
-                  >
-                    Start 
+                  <Button onClick={startRecording} disabled={isRecording} className="relative text-base font-semibold text-white">
+                    Start
                   </Button>
-                  <Button 
-                    onClick={stopRecording} 
-                    disabled={!isRecording} 
-                    className="relative text-base font-semibold text-white"
-                  >
-                    Stop 
+                  <Button onClick={stopRecording} disabled={!isRecording} className="relative text-base font-semibold text-white">
+                    Stop
                   </Button>
-                  <Button 
-                    onClick={() => hearWhatYouSaid(transcript)} 
-                    disabled={!transcript} 
-                    className="relative text-base font-semibold text-white"
-                  >
+                  <Button onClick={hearWhatYouSaid} disabled={!transcript} className="relative text-base font-semibold text-white">
                     Hear What You Said
                   </Button>
-                  <select 
-                    onChange={(e) => setSelectedVoice(voices[e.target.selectedIndex])} 
-                    className="hidden sm:flex"
-                  >
-                    {voices.map((voice, index) => (
-                      <option key={index} value={voice.name}>{voice.name}</option>
-                    ))}
-                  </select>
-                  <p className="relative text-base font-semibold">Transcript: {transcript}</p>
+                  <div className="relative text-base font-semibold">
+                    <select onChange={(e) => setSelectedVoice(voices[e.target.selectedIndex])} className="hidden sm:flex">
+                      {voices.map((voice, index) => (
+                        <option key={index} value={voice.name}>{voice.name}</option>
+                      ))}
+                    </select>
+                    <div>
+                      <p className="relative text-base font-semibold">Transcript: {transcript}</p>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <p>Speech Recognition is not supported in this browser.</p>
