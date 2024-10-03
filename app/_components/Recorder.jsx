@@ -13,11 +13,8 @@ const Recorder = () => {
     startRecording,
     stopRecording,
     hearWhatYouSaid,
-  } = useRecorder(); // Use the custom hook
-
-  // Filter out the voice named 'Microsoft Word' or similar names
-  const filteredVoices = voices.filter(voice => !voice.name.includes('Microsoft'));
-
+  } = useRecorder();
+  
   return (
     <div className="relative" id="home">
       <div aria-hidden="true" className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20">
@@ -47,12 +44,12 @@ const Recorder = () => {
                   </Button>
                   <div className="relative text-base font-semibold">
                     <select onChange={(e) => setSelectedVoice(voices[e.target.selectedIndex])} className="hidden sm:flex">
-                        {voices.map((voice, index) => (
+                      {voices.map((voice, index) => (
                         <option key={index} value={voice.name}>{voice.name}</option>
-                        ))}
+                      ))}
                     </select>
                     <div>
-                        <p className="relative text-base font-semibold">Transcript: {transcript}</p>
+                      <p className="relative text-base font-semibold">Transcript: {transcript}</p>
                     </div>
                   </div>
                 </>
@@ -78,7 +75,7 @@ const Recorder = () => {
         </div>
       </div>
     </div>
-  );  
+  );
 };
 
 export default Recorder;
