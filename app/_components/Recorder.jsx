@@ -1,11 +1,11 @@
-import React from 'react';
-import { Button } from '../../components/ui/button'; // Adjusted import path
+import React, { useEffect, useState } from 'react';
 import useRecorder from './useRecorder';
+import { Button } from '../../components/ui/button';
 
 const Recorder = () => {
   const {
     isRecording,
-    transcript,
+    transcript: initialTranscript,
     speechRecognitionSupported,
     voices,
     selectedVoice,
@@ -14,6 +14,25 @@ const Recorder = () => {
     stopRecording,
     hearWhatYouSaid,
   } = useRecorder();
+
+  const [transcript, setTranscript] = useState('');
+
+  useEffect(() => {
+    // Update the transcript when the initialTranscript changes
+    if (initialTranscript) {
+      addUniqueWords(initialTranscript);
+    }
+  }, [initialTranscript]);
+
+  // Function to add unique words to the transcript
+  const addUniqueWords = (newTranscript) => {
+    const newWords = newTranscript.split(' ');
+    setTranscript((prev) => {
+      const existingWords = prev.split(' ');
+      const uniqueWords = newWords.filter(word => !existingWords.includes(word));
+      return [...existingWords, ...uniqueWords].join(' ');
+    });
+  };
 
   return (
     <div className="relative" id="home">
@@ -34,10 +53,10 @@ const Recorder = () => {
               {speechRecognitionSupported ? (
                 <>
                   <Button onClick={startRecording} disabled={isRecording} className="relative text-base font-semibold text-white">
-                    Start
+                    Start 
                   </Button>
                   <Button onClick={stopRecording} disabled={!isRecording} className="relative text-base font-semibold text-white">
-                    Stop
+                    Stop 
                   </Button>
                   <Button onClick={hearWhatYouSaid} disabled={!transcript} className="relative text-base font-semibold text-white">
                     Hear What You Said

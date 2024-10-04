@@ -23,7 +23,6 @@ const useRecorder = () => {
 
     loadVoices();
     speechSynthesis.onvoiceschanged = loadVoices;
-
   }, []);
 
   const startRecording = () => {
@@ -39,10 +38,14 @@ const useRecorder = () => {
     recognition.lang = 'en-US';
 
     recognition.onresult = (event) => {
-      const text = Array.from(event.results)
+      const finalTranscript = Array.from(event.results)
+        .filter(result => result.isFinal)  // Only take final results
         .map(result => result[0].transcript)
         .join(' ');
-      setTranscript(text);
+      
+      if (finalTranscript) {
+        setTranscript(finalTranscript);
+      }
     };
 
     recognition.onerror = (event) => {
